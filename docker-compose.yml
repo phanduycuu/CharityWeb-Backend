@@ -1,0 +1,45 @@
+version: "3.9"
+
+networks:
+  CharityWeb:
+    driver: bridge
+services:
+  db:
+    # container_name: charity-db-1
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 190503
+      POSTGRES_DB: charity_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - CharityWeb
+  backend:
+    # container_name: charity-backend-1
+    image: charity-backend
+    build: 
+       context: .
+       dockerfile: Dockerfile
+    ports:
+      - "5000:8080"
+    depends_on:
+      - db
+    # environment:
+    #   - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=charity_db;Username=postgres;Password=190503
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
+    networks:
+      - CharityWeb
+  # frontend:
+  #   build: ./frontend
+  #   ports:
+  #     - "3000:3000"
+  #   depends_on:
+  #     - backend
+
+volumes:
+  postgres-data:
