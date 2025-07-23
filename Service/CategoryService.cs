@@ -31,14 +31,14 @@ namespace Charity.Service
         //    return categoriesDto;
         //}
 
-        //public async Task<CategoryDto?> getByIDAsync(int id)
-        //{
-        //    Category? categoryExisting = await _unitOfWork.Category.GetAsync(c => c.CategoryId == id);
-        //    if (categoryExisting != null)
-        //        return categoryExisting.ToCategoryDto();
+        public async Task<CategoryDto?> getByIDAsync(Guid id)
+        {
+            Category? categoryExisting = await _unitOfWork.Category.GetAsync(c => c.Id == id);
+            if (categoryExisting != null)
+                return categoryExisting.ToCategoryDto();
 
-        //    return null;
-        //}
+            return null;
+        }
 
         public async Task<QueryObject<CategoryDto>> GetCategoriesAsync(int page, int limit)
         {

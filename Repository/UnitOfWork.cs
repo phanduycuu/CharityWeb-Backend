@@ -11,13 +11,17 @@ namespace Charity.Repository
         private IDbContextTransaction _transaction;
 
         public ICategoryRepository Category { get; }
-        
+        public IRefreshTokenRepository RefreshToken { get; }
+
+        public IUserRepository User { get; }
 
         public UnitOfWork(CharityContext db)
         {
             _db = db;
 
             Category = new CategoryRepository(db);
+            User = new UserRepository(db);
+            RefreshToken = new RefreshTokenRepository(db);
 
         }
        

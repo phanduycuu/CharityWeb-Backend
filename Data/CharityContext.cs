@@ -20,6 +20,7 @@ public partial class CharityContext : DbContext
     public DbSet<Category> Categories { get; set; }
     public DbSet<Subscription> Subscriptions { get; set; }
     public DbSet<CampaignUpdate> CampaignUpdates { get; set; }
+    public virtual DbSet<RefreshToken> RefreshTokens { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseNpgsql("Name=ConnectionStrings:DefaultConnection");

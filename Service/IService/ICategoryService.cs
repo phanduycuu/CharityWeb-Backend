@@ -10,7 +10,7 @@ namespace Charity.Service.IService
         Task<CategoryDto> CreateAsync(CreateCategoryDto categoryDto);
         Task<QueryObject<CategoryDto>> GetCategoriesAsync(int page, int limit);
         //Task<CategoryDto> UpdateAsync(int id, UpdateCategoryDto supplierDto);
-        //Task<CategoryDto?> getByIDAsync(int id);
+        Task<CategoryDto?> getByIDAsync(Guid id);
         //Task<CategoryDto?> UpdateStatusAsync(int id);
     }
 }

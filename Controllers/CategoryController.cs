@@ -1,5 +1,6 @@
 ﻿using Charity.Dtos.Category;
 using Charity.Service.IService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Charity.Controllers
@@ -13,15 +14,16 @@ namespace Charity.Controllers
             _categoryService = categoryService;
         }
 
-        //[HttpGet("getByID/{id:int}")]
-        //public async Task<IActionResult> GetByID([FromRoute] int id)
-        //{
-        //    CategoryDto? catogoryExisting = await _categoryService.getByIDAsync(id);
-        //    if (catogoryExisting == null) return NotFound();
-        //    return Ok(catogoryExisting);
-        //}
+        [HttpGet("getByID/{id:Guid}")]
+        public async Task<IActionResult> GetByID([FromRoute] Guid id)
+        {
+            CategoryDto? catogoryExisting = await _categoryService.getByIDAsync(id);
+            if (catogoryExisting == null) return NotFound();
+            return Ok(catogoryExisting);
+        }
 
         [HttpPost("create")]
+       // [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([FromBody] CreateCategoryDto categoryCreateDto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);

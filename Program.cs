@@ -28,6 +28,9 @@ builder.Services.AddDbContext<CharityContext>(options =>
 });
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+//builder.Services.AddScoped<IUserService, CustomerService>();
 
 builder.Services.AddAuthentication(options =>
 {
@@ -83,7 +86,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors(x => x
-    .WithOrigins("http://localhost:5173")
+    .WithOrigins("http://localhost:5000")
     .AllowAnyMethod()
     .AllowAnyHeader()
     .AllowCredentials()
