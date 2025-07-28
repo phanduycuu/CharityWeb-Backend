@@ -1,6 +1,9 @@
-﻿namespace Charity.Models
+﻿using Charity.Dtos.Category;
+using Charity.Models;
+
+namespace Charity.Dtos.Campaign
 {
-    public class Campaign
+    public class CampaignDto
     {
         public Guid Id { get; set; }
         public string Title { get; set; } = null!;
@@ -11,13 +14,10 @@
         public DateTime Deadline { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-        public Guid CreatedById { get; set; }
-        public User CreatedBy { get; set; }
-
-        public Guid CategoryId { get; set; }
-        public Category Category { get; set; }
-        public string Status { get; set; } = "InProgress";
-        public ICollection<Donation> Donations { get; set; }
-        public ICollection<CampaignUpdate> Updates { get; set; }
+        public UserDto? CreatedBy { get; set; }
+        public CategoryDto? Category { get; set; }
+        public string Status { get; set; }
+        public ICollection<Models.Donation> Donations { get; set; } = new List<Models.Donation>();
+        //public ICollection<CampaignUpdate> Updates { get; set; }
     }
 }

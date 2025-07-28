@@ -1,9 +1,10 @@
-
+﻿
 
 using Microsoft.AspNetCore.Mvc;
 using Charity.Service.IService;
 using Charity.Exceptions;
 using Charity.Dtos.Auth;
+using Google.Apis.Auth;
 
 namespace Charity.Controllers
 {
@@ -23,7 +24,7 @@ namespace Charity.Controllers
         [HttpPost("RenewToken")]
         public async Task<IActionResult> RenewToken(TokenKit tokenKit)
         {
-            var result = await _tokenService.RenewToken(tokenKit);    
+            var result = await _tokenService.RenewToken(tokenKit);
             return Ok(result);
         }
 
@@ -39,10 +40,10 @@ namespace Charity.Controllers
 
                 var cookieOptions = new CookieOptions
                 {
-                    HttpOnly = true,  
-                    Secure = true,  
+                    HttpOnly = true,
+                    Secure = true,
                     SameSite = SameSiteMode.Strict,
-                    Expires = DateTime.UtcNow.AddHours(1) 
+                    Expires = DateTime.UtcNow.AddHours(1)
                 };
 
                 Response.Cookies.Append("accessToken", loginReponse.TokenKit.AccessToken, cookieOptions);
@@ -56,7 +57,8 @@ namespace Charity.Controllers
             {
                 return BadRequest(new { message = ex.Message });
             }
-            catch(UnauthorizedAccessException ex) {
+            catch (UnauthorizedAccessException ex)
+            {
 
                 return Unauthorized(new { message = ex.Message });
             }
@@ -81,6 +83,35 @@ namespace Charity.Controllers
         {
             var result = await _authService.Logout(request.IdUser);
             return Ok(new { message = "Logged out successfully" });
+        }
+
+        [HttpPost("google-login")]
+        public async Task<IActionResult> GoogleLogin([FromBody] GoogleLoginRequest request)
+        {
+            try
+            {
+                // Xác thực token với Google
+                var payload = await GoogleJsonWebSignature.ValidateAsync(request.IdToken);
+
+                // payload chứa email, name, picture,...
+                var user = await _authService.LoginWithGoogle(payload);
+                if (user == null) return Unauthorized("Invalid Google login");
+
+                var cookieOptions = new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true,
+                    SameSite = SameSiteMode.Strict,
+                    Expires = DateTime.UtcNow.AddHours(1)
+                };
+
+                Response.Cookies.Append("accessToken", user.TokenKit.AccessToken, cookieOptions);
+                return Ok(user);
+            }
+            catch (InvalidJwtException)
+            {
+                return Unauthorized("Invalid Google token");
+            }
         }
     }
 }

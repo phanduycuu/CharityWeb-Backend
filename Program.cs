@@ -7,6 +7,7 @@ using Charity.Service;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Charity.Helper;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,6 +31,9 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<ICampaignServices, CampaignServices>();
+builder.Services.AddScoped<IImageService, ImageService>();
+builder.Services.AddScoped<IDonationServices, DonationSevice>();
 //builder.Services.AddScoped<IUserService, CustomerService>();
 
 builder.Services.AddAuthentication(options =>
@@ -76,6 +80,8 @@ builder.Services.AddSwaggerGen(options => {
         new string[] { }
     }});
 });
+builder.Services.Configure<VnpayConfig>(
+    builder.Configuration.GetSection("Vnpay"));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

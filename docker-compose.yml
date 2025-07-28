@@ -32,6 +32,8 @@ services:
     #   - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=charity_db;Username=postgres;Password=190503
     environment:
       ASPNETCORE_ENVIRONMENT: "Development"
+    volumes:
+      - ./uploaded_images:/app/wwwroot/images/campaign
     networks:
       - CharityWeb
   # frontend:

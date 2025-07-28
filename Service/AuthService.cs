@@ -5,6 +5,8 @@ using Charity.Mapper;
 using Charity.Models;
 using Charity.Repository.IRepository;
 using Charity.Service.IService;
+using Google.Apis.Auth;
+using Newtonsoft.Json.Linq;
 
 
 
@@ -51,6 +53,30 @@ namespace Charity.Service
         {
             var result = await _tokenService.InvalidateRefreshToken(idUser);
             return result;
+        }
+
+        public async Task<LoginReponseDto> LoginWithGoogle(GoogleJsonWebSignature.Payload payload)
+        {
+            var existingUser = await _unitOfWork.User.GetAsync(u => u.Email == payload.Email);
+            if (existingUser == null)
+            {
+                // Đăng ký tự động
+                var newUser = new User
+                {
+                    FullName = payload.Name,
+                    Email = payload.Email,
+                };
+                await _unitOfWork.User.AddAsync(newUser);
+                await _unitOfWork.SaveAsync();
+                existingUser = newUser;
+            }
+
+            var tokenKit = await _tokenService.GenerateToken(existingUser);
+            return new LoginReponseDto
+            {
+                TokenKit = tokenKit,
+                User = existingUser.ToUserDto(),
+            };
         }
     }
 }

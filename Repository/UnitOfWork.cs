@@ -14,7 +14,8 @@ namespace Charity.Repository
         public IRefreshTokenRepository RefreshToken { get; }
 
         public IUserRepository User { get; }
-
+        public ICampaignRepository Campaign { get; }
+        public IDonationRepository Donation { get; }
         public UnitOfWork(CharityContext db)
         {
             _db = db;
@@ -22,6 +23,8 @@ namespace Charity.Repository
             Category = new CategoryRepository(db);
             User = new UserRepository(db);
             RefreshToken = new RefreshTokenRepository(db);
+            Campaign= new CampaignRepository(db);
+            Donation = new DonationRepository(db);
 
         }
        
